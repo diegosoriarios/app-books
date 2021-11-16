@@ -6,17 +6,37 @@ import 'package:flutter_auth/components/rounded_password_field.dart';
 import 'package:flutter_auth/home.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({
     Key key,
   }) : super(key: key);
 
-void handleOnPress(BuildContext context) async {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Home()),
-  );
+  @override
+  _BodyState createState() => _BodyState();
 }
+
+class _BodyState extends State<Body> {
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  bool error = false;
+
+  void handleOnPress() async {
+    setState(() {
+      error = false;
+    });
+    if (_emailController.text == "manu@teste.com" &&
+        _passwordController.text == "123456") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+      return;
+    }
+    setState(() {
+      error = true;
+    });
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +59,22 @@ void handleOnPress(BuildContext context) async {
             RoundedInputField(
               hintText: "Your Email",
               onChanged: (value) {},
+              controller: _emailController,
             ),
             RoundedPasswordField(
               onChanged: (value) {},
+              controller: _passwordController,
             ),
+            error
+                ? Text("Erro ao fazer login",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ))
+                : Container(),
             RoundedButton(
               text: "LOGIN",
-              press: handleOnPress
+              press: handleOnPress,
+              textColor: Colors.white,
             ),
             SizedBox(height: size.height * 0.03),
           ],
